@@ -1,0 +1,1517 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ config.BRAND_NAME }} — Portfolio</title>
+    
+    <!-- Dynamic Favicon Setup -->
+    <link rel="shortcut icon" href="{{ url_for('serve_root_assets', filename=config.FAVICON) }}" type="image/x-icon">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap');
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        :root {
+            --bg-dark: #03050c; /* Obsidian deep background */
+            --bg-card: rgba(13, 20, 38, 0.45); /* Translucent dark glass panel */
+            --accent: #3b82f6;
+            --accent-glow: rgba(59, 130, 246, 0.15);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --font-sans: 'Plus Jakarta Sans', sans-serif;
+            --font-header: 'Outfit', sans-serif; /* High visual impact heading font */
+            --header-height: 75px;
+            
+            --accent-blue: #3b82f6;
+            --accent-purple: #8b5cf6;
+            --accent-cyan: #06b6d4;
+            --glass-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            font-family: var(--font-sans);
+            overflow-x: hidden;
+            scroll-behavior: smooth;
+            -webkit-font-smoothing: antialiased;
+            padding-top: var(--header-height);
+        }
+
+        /* Ambient Background Glow Blobs */
+        .glow-blob {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            z-index: 0;
+            pointer-events: none;
+            opacity: 0.45;
+            transition: all 1.5s ease;
+        }
+
+        .glow-blob-1 {
+            top: -10%;
+            left: -10%;
+            width: clamp(300px, 40vw, 600px);
+            height: clamp(300px, 40vw, 600px);
+            background: radial-gradient(circle, var(--accent-purple) 0%, transparent 70%);
+            animation: driftBlob1 20s infinite alternate ease-in-out;
+        }
+
+        .glow-blob-2 {
+            top: 40%;
+            right: -10%;
+            width: clamp(350px, 45vw, 700px);
+            height: clamp(350px, 45vw, 700px);
+            background: radial-gradient(circle, var(--accent-blue) 0%, transparent 70%);
+            animation: driftBlob2 25s infinite alternate ease-in-out;
+        }
+
+        .glow-blob-3 {
+            bottom: -10%;
+            left: 20%;
+            width: clamp(300px, 40vw, 600px);
+            height: clamp(300px, 40vw, 600px);
+            background: radial-gradient(circle, var(--accent-cyan) 0%, transparent 70%);
+            animation: driftBlob3 18s infinite alternate ease-in-out;
+        }
+
+        @keyframes driftBlob1 {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(100px, 50px) scale(1.1); }
+            100% { transform: translate(50px, -50px) scale(0.9); }
+        }
+
+        @keyframes driftBlob2 {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-80px, -60px) scale(0.95); }
+            100% { transform: translate(40px, 80px) scale(1.1); }
+        }
+
+        @keyframes driftBlob3 {
+            0% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(60px, -40px) scale(1.05); }
+            100% { transform: translate(-60px, 40px) scale(0.9); }
+        }
+
+        /* Segmented Top Progress Bar */
+        .progress-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.03);
+            z-index: 110;
+            display: flex;
+            padding: 0 4px;
+        }
+
+        .progress-segment {
+            flex: 1;
+            height: 100%;
+            background: rgba(255, 255, 255, 0.08);
+            margin-right: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-segment:last-child { margin-right: 0; }
+
+        .progress-fill {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--accent-blue), var(--accent-cyan));
+            transition: width 0.1s linear;
+        }
+
+        /* Floating Pill Header Navigation */
+        .global-header {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 90%;
+            max-width: 1140px;
+            height: 65px;
+            background: rgba(7, 9, 14, 0.45);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 50px;
+            z-index: 105; /* Lifted above overlay */
+            display: flex;
+            align-items: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        .header-container {
+            width: 100%;
+            margin: 0 auto;
+            padding: 0 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .brand-logo {
+            font-family: var(--font-header);
+            font-size: 1.25rem;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            z-index: 102;
+        }
+
+        .header-nav-groups {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+        }
+
+        .header-menu {
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            list-style: none;
+        }
+
+        .header-socials-top {
+            display: flex;
+            align-items: center;
+            gap: 24px;
+            border-left: 1px solid rgba(255, 255, 255, 0.15);
+            padding-left: 24px;
+        }
+
+        .menu-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: color 0.3s ease, text-shadow 0.3s ease;
+        }
+
+        .menu-link:hover, .menu-link.active-nav { 
+            color: var(--text-main); 
+            text-shadow: 0 0 10px rgba(255,255,255,0.4); 
+        }
+
+        .social-link-top { color: var(--text-muted); text-decoration: none; font-size: 0.88rem; font-weight: 500; transition: color 0.3s; }
+        .social-link-top:hover { color: var(--accent-cyan); }
+
+        .btn-resume {
+            background: var(--text-main);
+            color: var(--bg-dark);
+            padding: 9px 20px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            text-decoration: none;
+            transition: transform 0.3s, background-color 0.3s;
+        }
+
+        .btn-resume:hover { transform: translateY(-1px); background: #e2e8f0; }
+
+        /* Mobile Layout Hamburger Triggers */
+        .mobile-menu-trigger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            z-index: 106;
+            padding: 8px;
+        }
+
+        .hamburger-box { width: 24px; height: 18px; display: inline-block; position: relative; }
+
+        .hamburger-inner, .hamburger-inner::before, .hamburger-inner::after {
+            width: 24px;
+            height: 2px;
+            background-color: var(--text-main);
+            position: absolute;
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            border-radius: 2px;
+        }
+
+        .hamburger-inner { top: 50%; transform: translateY(-50%); }
+        .hamburger-inner::before { content: ""; top: -8px; left: 0; }
+        .hamburger-inner::after { content: ""; bottom: -8px; left: 0; }
+
+        /* Fullscreen Mobile Drawer Sheet */
+        .mobile-navigation-overlay {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 100%;
+            height: 100vh;
+            background: rgba(4, 6, 10, 0.98);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 101;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: right 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 40px;
+        }
+
+        .mobile-navigation-overlay.is-open { right: 0; }
+
+        .mobile-menu-list {
+            list-style: none;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+            margin-bottom: 48px;
+        }
+
+        .mobile-menu-link {
+            font-family: var(--font-header);
+            font-size: 2rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .mobile-menu-link:hover { color: var(--text-main); }
+        .mobile-menu-link.active-nav { color: var(--text-main); font-weight: 600; text-decoration: underline; text-decoration-color: var(--accent); text-underline-offset: 8px; }
+        .mobile-socials-wrapper { display: flex; gap: 24px; flex-wrap: wrap; justify-content: center; }
+
+        /* Editorial Content Sections */
+        .story-section {
+            position: relative;
+            min-height: calc(100vh - var(--header-height));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 80px 24px;
+            overflow: hidden;
+        }
+
+        .bg-layer {
+            position: absolute;
+            top: -10%;
+            left: 0;
+            width: 100%;
+            height: 120%;
+            z-index: 1;
+            background-size: cover;
+            background-position: center;
+            transform: translateY(var(--parallax-y, 0px)) scale(1.1);
+            filter: brightness(0.15) saturate(0.75);
+            will-change: transform;
+            transition: filter 2.0s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .bg-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            background: linear-gradient(180deg, rgba(3,5,12,0.8) 0%, rgba(3,5,12,0.5) 50%, rgba(3,5,12,0.98) 100%);
+        }
+
+        .content-container {
+            position: relative;
+            z-index: 3;
+            width: 100%;
+            max-width: 1140px;
+            margin: 0 auto;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1), transform 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .story-section.revealed .content-container { opacity: 1; transform: translateY(0); }
+        .story-section.active .bg-layer { transform: translateY(var(--parallax-y, 0px)) scale(1.05); }
+
+        /* Structural Hero Configuration */
+        .hero-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-title-sub {
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            color: var(--accent-cyan);
+            font-size: 0.85rem;
+            font-weight: 800;
+            margin-bottom: 16px;
+            font-family: var(--font-header);
+        }
+
+        .hero-name {
+            font-family: var(--font-header);
+            font-size: clamp(3.5rem, 7vw, 5.2rem);
+            font-weight: 800;
+            line-height: 1.05;
+            letter-spacing: -0.03em;
+            margin-bottom: 24px;
+            background: linear-gradient(135deg, var(--text-main) 30%, #a5b4fc 70%, var(--accent-cyan) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-desc {
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            font-family: var(--font-sans);
+            color: var(--text-muted);
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+
+        .hero-meta-details {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.8;
+            margin-bottom: 40px;
+        }
+
+        .hero-meta-details span { color: var(--text-main); }
+
+        /* Media Assets Combined Display Stack (Photo + Video Player) */
+        .hero-media-stack {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 32px;
+            width: 100%;
+        }
+
+        /* Profile Frame Neon connic-gradient border */
+        .profile-frame {
+            position: relative;
+            width: clamp(220px, 28vw, 280px);
+            height: clamp(220px, 28vw, 280px);
+            border-radius: 50%;
+            padding: 5px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan));
+            box-shadow: 0 0 30px rgba(139, 92, 246, 0.2), 0 20px 40px rgba(0,0,0,0.5);
+            overflow: hidden;
+            transition: all 0.5s ease;
+        }
+
+        .profile-frame::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: conic-gradient(transparent, transparent, var(--accent-cyan), var(--accent-purple), transparent);
+            animation: rotateBorder 6s linear infinite;
+            z-index: 1;
+        }
+
+        .profile-frame-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: var(--bg-dark);
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .profile-actual-img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center top;
+            border-radius: 50%;
+            transition: transform 0.5s ease;
+        }
+
+        .profile-frame:hover {
+            transform: scale(1.03);
+            box-shadow: 0 0 45px rgba(6, 182, 212, 0.35), 0 20px 40px rgba(0,0,0,0.6);
+        }
+
+        @keyframes rotateBorder {
+            100% { transform: rotate(360deg); }
+        }
+
+        .video-intro-wrapper {
+            width: 100%;
+            max-width: 280px; /* Adjusted to 280px to align with profile photo clamp limit */
+            background: rgba(10, 16, 30, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 6px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(59, 130, 246, 0.1);
+            backdrop-filter: blur(15px);
+            overflow: hidden;
+            transition: all 0.4s ease;
+        }
+
+        .video-intro-wrapper:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.6), 0 0 25px rgba(6, 182, 212, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .portfolio-video {
+            width: 100%;
+            border-radius: 14px;
+            display: block;
+            outline: none;
+            background: #000;
+        }
+
+        /* Modernized Timeline Styling Elements */
+        .timeline-modern-container {
+            position: relative;
+            margin-top: 40px;
+            padding-left: 35px; /* Offset to the left for vertical bar */
+        }
+
+        .timeline-modern-container::before {
+            content: '';
+            position: absolute;
+            left: 8px;
+            top: 10px;
+            bottom: 10px;
+            width: 3px;
+            background: linear-gradient(to bottom, var(--accent-purple) 0%, var(--accent-cyan) 50%, var(--accent-blue) 100%);
+            border-radius: 4px;
+            box-shadow: 0 0 10px rgba(6, 182, 212, 0.3);
+        }
+
+        .timeline-modern-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 32px 36px;
+            position: relative;
+            margin-bottom: 40px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* Node dot on vertical bar */
+        .timeline-modern-card::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 36px;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--bg-dark);
+            border: 3px solid var(--accent-cyan);
+            box-shadow: 0 0 8px var(--accent-cyan);
+            transition: all 0.4s ease;
+            z-index: 5;
+        }
+
+        .timeline-modern-card:hover::before {
+            background: var(--accent-cyan);
+            transform: scale(1.3);
+            box-shadow: 0 0 15px var(--accent-cyan);
+        }
+
+        .timeline-modern-card:hover {
+            transform: translateX(6px);
+            border-color: rgba(6, 182, 212, 0.25);
+            background: rgba(13, 20, 38, 0.55);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.4), 0 0 25px rgba(6, 182, 212, 0.08);
+        }
+
+        .timeline-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 24px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            padding-bottom: 20px;
+        }
+
+        .company-identity-group { display: flex; align-items: center; gap: 20px; }
+
+        .company-avatar-box {
+            width: 54px;
+            height: 54px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--font-header);
+            font-size: 1.4rem;
+            color: var(--accent-cyan);
+            font-weight: 700;
+        }
+
+        .job-title-badge {
+            background: var(--accent-glow);
+            color: var(--accent-cyan);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-top: 6px;
+        }
+
+        .timeline-period-badge {
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            font-weight: 600;
+            background: rgba(255,255,255,0.04);
+            padding: 8px 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.04);
+        }
+
+        .timeline-body-list { list-style: none; display: flex; flex-direction: column; gap: 14px; }
+
+        .timeline-body-list li {
+            position: relative;
+            padding-left: 24px;
+            font-size: 0.98rem;
+            line-height: 1.7;
+            color: rgba(248, 250, 252, 0.85);
+        }
+
+        .timeline-body-list li::before {
+            content: "";
+            position: absolute;
+            left: 0;
+            top: 10px;
+            width: 6px;
+            height: 6px;
+            background: var(--accent-cyan);
+            border-radius: 50%;
+        }
+
+        /* Presentation Cards & Structural Utilities */
+        .story-card {
+            background: var(--bg-card);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            padding: 36px;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .story-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            transition: all 0.6s ease;
+        }
+
+        .story-card:hover::after {
+            left: 100%;
+        }
+
+        .story-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: rgba(139, 92, 246, 0.3);
+            background: rgba(13, 20, 38, 0.55);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 30px rgba(139, 92, 246, 0.1);
+        }
+
+        .card-meta { font-family: var(--font-header); font-size: 0.75rem; color: var(--accent-cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; }
+        .card-title { font-family: var(--font-header); font-size: 1.4rem; font-weight: 700; margin-bottom: 8px; color: var(--text-main); }
+        .card-subtitle { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 20px; }
+
+        .section-title {
+            font-family: var(--font-header);
+            font-size: clamp(2.2rem, 5vw, 3.4rem);
+            font-weight: 800;
+            margin-bottom: 56px;
+            position: relative;
+            letter-spacing: -0.02em;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -12px;
+            width: 50px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            border-radius: 2px;
+        }
+
+        .highlights-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; }
+        .skills-wrapper { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 32px; }
+
+        .skill-group {
+            background: rgba(10, 16, 30, 0.3);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 32px;
+            backdrop-filter: blur(15px);
+            transition: all 0.4s ease;
+        }
+
+        .skill-group:hover {
+            border-color: rgba(255, 255, 255, 0.15);
+            background: rgba(13, 20, 38, 0.45);
+            transform: translateY(-4px);
+        }
+
+        .skill-group-title {
+            font-family: var(--font-header);
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 20px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .skill-group-title::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            bottom: -6px;
+            width: 25px;
+            height: 2px;
+            background: var(--accent-cyan);
+        }
+
+        .skill-tags { display: flex; flex-wrap: wrap; gap: 10px; }
+
+        .skill-tag {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: var(--text-muted);
+            padding: 10px 18px;
+            border-radius: 12px;
+            font-size: 0.88rem;
+            font-weight: 500;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .skill-tag:hover {
+            background: var(--accent-glow);
+            border-color: var(--accent-cyan);
+            color: var(--text-main);
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.2);
+            transform: scale(1.05) translateY(-1px);
+        }
+
+        /* Academic dashboard styled section */
+        .academic-credential-card {
+            background: var(--bg-card);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 40px;
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            flex-wrap: wrap;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.4);
+            transition: all 0.4s ease;
+        }
+
+        .academic-credential-card:hover {
+            border-color: rgba(6, 182, 212, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .contact-split-layout { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; margin-top: 48px; }
+        
+        .map-wrapper {
+            position: relative;
+            width: 100%;
+            height: 380px;
+            border-radius: 24px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(6, 182, 212, 0.08);
+            transition: all 0.4s ease;
+        }
+
+        .map-wrapper:hover {
+            border-color: var(--accent-cyan);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.6), 0 0 25px rgba(6, 182, 212, 0.25);
+        }
+
+        .map-wrapper iframe { position: absolute; top: 0; left: 0; width: 100%; height: 100%; border: 0; display: block; }
+        .contact-links { display: flex; flex-direction: column; gap: 16px; }
+
+        .contact-btn {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 18px 32px;
+            border-radius: 50px;
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 14px;
+            backdrop-filter: blur(10px);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        
+        .contact-btn:hover {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #ffffff;
+            border-color: transparent;
+            box-shadow: 0 10px 25px rgba(139, 92, 246, 0.35);
+            transform: translateY(-3px);
+        }
+
+        /* Staggered entry transitions for components */
+        .timeline-modern-card,
+        .highlights-grid .story-card,
+        .skills-wrapper .skill-group,
+        .contact-links .contact-btn,
+        .map-wrapper {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 1.0s cubic-bezier(0.16, 1, 0.3, 1), transform 1.0s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .story-section.revealed .timeline-modern-card,
+        .story-section.revealed .highlights-grid .story-card,
+        .story-section.revealed .skills-wrapper .skill-group,
+        .story-section.revealed .contact-links .contact-btn,
+        .story-section.revealed .map-wrapper {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Experience Timeline Delays */
+        .story-section.revealed .timeline-modern-card:nth-child(1) { transition-delay: 0.1s; }
+        .story-section.revealed .timeline-modern-card:nth-child(2) { transition-delay: 0.22s; }
+        .story-section.revealed .timeline-modern-card:nth-child(3) { transition-delay: 0.34s; }
+        .story-section.revealed .timeline-modern-card:nth-child(4) { transition-delay: 0.46s; }
+        .story-section.revealed .timeline-modern-card:nth-child(5) { transition-delay: 0.58s; }
+
+        /* Projects Delays */
+        .story-section.revealed .highlights-grid .story-card:nth-child(1) { transition-delay: 0.1s; }
+        .story-section.revealed .highlights-grid .story-card:nth-child(2) { transition-delay: 0.22s; }
+        .story-section.revealed .highlights-grid .story-card:nth-child(3) { transition-delay: 0.34s; }
+        .story-section.revealed .highlights-grid .story-card:nth-child(4) { transition-delay: 0.46s; }
+
+        /* Skills Delays */
+        .story-section.revealed .skills-wrapper .skill-group:nth-child(1) { transition-delay: 0.1s; }
+        .story-section.revealed .skills-wrapper .skill-group:nth-child(2) { transition-delay: 0.2s; }
+        .story-section.revealed .skills-wrapper .skill-group:nth-child(3) { transition-delay: 0.3s; }
+        .story-section.revealed .skills-wrapper .skill-group:nth-child(4) { transition-delay: 0.4s; }
+        .story-section.revealed .skills-wrapper .skill-group:nth-child(5) { transition-delay: 0.5s; }
+
+        /* Contact Delays */
+        .story-section.revealed .contact-links .contact-btn:nth-child(1) { transition-delay: 0.1s; }
+        .story-section.revealed .contact-links .contact-btn:nth-child(2) { transition-delay: 0.2s; }
+        .story-section.revealed .contact-links .contact-btn:nth-child(3) { transition-delay: 0.3s; }
+        .story-section.revealed .contact-links .contact-btn:nth-child(4) { transition-delay: 0.4s; }
+        .story-section.revealed .map-wrapper { transition-delay: 0.25s; }
+
+        .scroll-down-hint {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-muted);
+            font-size: 0.65rem;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            animation: pulseHint 2.5s infinite;
+        }
+
+        @keyframes pulseHint {
+            0%, 100% { opacity: 0.4; transform: translate(-50%, 0); }
+            50% { opacity: 1; transform: translate(-50%, 10px); }
+        }
+
+        .mouse-icon { width: 22px; height: 36px; border: 2px solid rgba(255, 255, 255, 0.3); border-radius: 12px; position: relative; }
+        .mouse-icon::after {
+            content: '';
+            position: absolute;
+            top: 8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 4px;
+            height: 8px;
+            background-color: var(--accent-cyan);
+            border-radius: 2px;
+            animation: scrollDot 1.8s infinite ease-in-out;
+        }
+
+        @keyframes scrollDot {
+            0% { opacity: 0; transform: translate(-50%, 0); }
+            40% { opacity: 1; }
+            80% { opacity: 0; transform: translate(-50%, 14px); }
+            100% { opacity: 0; }
+        }
+
+        .global-footer { background: #03050c; border-top: 1px solid rgba(255, 255, 255, 0.05); padding: 60px 24px; color: var(--text-muted); }
+        .footer-container { max-width: 1140px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 24px; }
+        .footer-credits p { font-family: var(--font-header); font-size: 1.25rem; color: var(--text-main); font-weight: 700; }
+        .footer-socials { display: flex; gap: 24px; }
+        .footer-link { color: var(--text-muted); text-decoration: none; transition: color 0.3s; }
+        .footer-link:hover { color: var(--text-main); }
+
+        /* ==========================================================================
+           ⚡ COMPACT DEVICE FLUID NAV OVERLAY MEDIA QUERY MATRIX
+           ========================================================================== */
+        @media (max-width: 1024px) {
+            .header-nav-groups { display: none; }
+            .mobile-menu-trigger { display: block; }
+            .hero-layout { grid-template-columns: 1fr; text-align: center; gap: 48px; }
+            .hero-media-stack { order: -1; }
+            .contact-split-layout { grid-template-columns: 1fr; gap: 40px; }
+            .global-header { width: 95%; top: 10px; height: 60px; }
+            .timeline-modern-container { padding-left: 20px; }
+            .timeline-modern-container::before { left: 0; }
+            .timeline-modern-card::before { left: -25px; }
+        }
+        .mobile-menu-trigger.is-active .hamburger-inner { transform: rotate(45deg); }
+        .mobile-menu-trigger.is-active .hamburger-inner::before { top: 0; opacity: 0; }
+        .mobile-menu-trigger.is-active .hamburger-inner::after { bottom: 0; transform: rotate(-90deg); }
+
+        .metric-badge-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            width: 100%;
+        }
+        .metric-badge {
+            font-size: 0.78rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            padding: 6px 12px;
+            border-radius: 12px;
+            color: var(--text-muted);
+            font-family: var(--font-header);
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .metric-badge:hover {
+            background: var(--accent-glow);
+            border-color: var(--accent-cyan);
+            color: var(--text-main);
+            transform: translateY(-1px);
+        }
+        .metric-badge-val {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+    </style>
+    <!-- Chart.js CDN library for stats dashboard -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+    <!-- Ambient Background Glow Blobs -->
+    <div class="glow-blob glow-blob-1"></div>
+    <div class="glow-blob glow-blob-2"></div>
+    <div class="glow-blob glow-blob-3"></div>
+
+    <div class="progress-nav" id="progressNav"></div>
+
+    <header class="global-header">
+        <div class="header-container">
+            <a href="#" class="brand-logo">{{ config.BRAND_NAME }}</a>
+            
+            <div class="header-nav-groups">
+                <nav>
+                    <ul class="header-menu">
+                        <li><a href="#story" class="menu-link active-nav">Story</a></li>
+                        <li><a href="#journey" class="menu-link">Experience</a></li>
+                        <li><a href="#analytics" class="menu-link">Analytics</a></li>
+                        <li><a href="#highlights" class="menu-link">Projects</a></li>
+                        <li><a href="#matrix" class="menu-link">Skills</a></li>
+                        <li><a href="#academic" class="menu-link">Education</a></li>
+                    </ul>
+                </nav>
+                <div class="header-socials-top">
+                    <a href="{{ config.GATEWAYS.linkedin }}" target="_blank" class="social-link-top">LinkedIn</a>
+                    <a href="{{ config.GATEWAYS.github }}" target="_blank" class="social-link-top">GitHub</a>
+                    <a href="{{ config.GATEWAYS.live_portal }}" target="_blank" class="social-link-top">Live Portal</a>
+                    <a href="{{ config.GATEWAYS.resume }}" class="btn-resume">Resume</a>
+                </div>
+            </div>
+
+            <button class="mobile-menu-trigger" id="mobileMenuTrigger" aria-label="Toggle Navigation Panel">
+                <span class="hamburger-box">
+                    <span class="hamburger-inner"></span>
+                </span>
+            </button>
+        </div>
+    </header>
+
+    <div class="mobile-navigation-overlay" id="mobileNavigationOverlay">
+        <ul class="mobile-menu-list">
+            <li><a href="#story" class="mobile-menu-link">Story</a></li>
+            <li><a href="#journey" class="mobile-menu-link">Experience</a></li>
+            <li><a href="#analytics" class="mobile-menu-link">Analytics</a></li>
+            <li><a href="#highlights" class="mobile-menu-link">Projects</a></li>
+            <li><a href="#matrix" class="mobile-menu-link">Skills</a></li>
+            <li><a href="#academic" class="mobile-menu-link">Education</a></li>
+        </ul>
+        <div class="mobile-socials-wrapper">
+            <a href="{{ config.GATEWAYS.linkedin }}" target="_blank" class="contact-btn">LinkedIn</a>
+            <a href="{{ config.GATEWAYS.github }}" target="_blank" class="contact-btn">GitHub</a>
+            <a href="{{ config.GATEWAYS.resume }}" class="contact-btn" style="background: var(--text-main); color: var(--bg-dark);">Download Resume</a>
+        </div>
+    </div>
+
+    <!-- Section 1: Hero Cover Story Layout -->
+    <section id="story" class="story-section data-section active">
+        <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=1920&q=80')"></div>
+        <div class="bg-overlay"></div>
+        <div class="content-container hero-layout">
+            <div>
+                <p class="hero-title-sub">{{ config.PROFILE.title_sub }}</p>
+                <h1 class="hero-name">{{ config.PROFILE.name_first }}<br>{{ config.PROFILE.name_last }}</h1>
+                <p class="hero-desc">{{ config.PROFILE.bio }}</p>
+                
+                <div class="hero-meta-details">
+                    Location: <span>{{ config.PROFILE.location }}</span> &nbsp;|&nbsp; Open to: <span>{{ config.PROFILE.open_to }}</span><br>
+                    Email: <span>{{ config.PROFILE.email }}</span> &nbsp;|&nbsp; Phone: <span>{{ config.PROFILE.phone }}</span>
+                </div>
+
+                <div class="contact-links" style="margin-top: 0; align-items: flex-start;">
+                    <a href="#journey" class="contact-btn" style="background: var(--accent-blue); border-color: var(--accent-blue); color: white;">Explore Portfolio</a>
+                </div>
+            </div>
+            
+            <div class="hero-media-stack">
+                <div class="profile-frame">
+                    <div class="profile-frame-inner">
+                        <img src="{{ url_for('serve_root_assets', filename=config.PROFILE_PIC) if config.PROFILE_PIC else '' }}" alt="Rohit Jain Profile Photo" class="profile-actual-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="profile-img-fallback" style="display:none;">{{ config.INITIALS }}</div>
+                    </div>
+                </div>
+                
+                <!-- Immersive Native HTML5 Video System -->
+                {% if config.INTRO_VIDEO %}
+                <div class="video-intro-wrapper">
+                    <video class="portfolio-video" controls preload="metadata" poster="{{ url_for('serve_root_assets', filename=config.PROFILE_PIC) }}">
+                        <source src="{{ url_for('serve_root_assets', filename=config.INTRO_VIDEO) }}" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="scroll-down-hint">
+            <span>Scroll Story</span>
+            <div class="mouse-icon"></div>
+        </div>
+    </section>
+
+    <!-- Section 2: Professional Timeline Component -->
+    <section id="journey" class="story-section data-section">
+        <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1920&q=80')"></div>
+        <div class="bg-overlay"></div>
+        <div class="content-container">
+            <h2 class="section-title">Professional Journey[cite: 1]</h2>
+            <div class="timeline-modern-container">
+                {% for job in timeline %}
+                <div class="timeline-modern-card">
+                    <div class="timeline-card-header">
+                        <div class="company-identity-group">
+                            <div class="company-avatar-box">{{ job.company[0] }}</div>
+                            <div>
+                                <h3 class="card-title" style="font-size: 1.4rem; font-weight: 600;">{{ job.company }}[cite: 1]</h3>
+                                <span class="job-title-badge">{{ job.role }}[cite: 1]</span>
+                            </div>
+                        </div>
+                        <div class="timeline-period-badge">{{ job.period }}[cite: 1]</div>
+                    </div>
+                    <div class="card-body">
+                        <ul class="timeline-body-list">
+                            {% for highlight in job.highlights %}
+                            <li>{{ highlight }}[cite: 1]</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 2.5: Platform Metrics & Skill Analytics -->
+    <section id="analytics" class="story-section data-section">
+        <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=1920&q=80')"></div>
+        <div class="bg-overlay"></div>
+        <div class="content-container">
+            <h2 class="section-title">Metrics & Analytics</h2>
+            
+            <div class="highlights-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 32px; margin-top: 20px;">
+                <!-- Card 1: Radar Chart for Domain Capabilities -->
+                <div class="story-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 450px; padding: 28px;">
+                    <div class="card-meta">Capability Map</div>
+                    <h3 class="card-title" style="margin-bottom: 20px;">Domain Core Strengths</h3>
+                    <div style="width: 100%; height: 240px; position: relative;">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                    <div class="metric-badge-grid">
+                        {% for item in config.STATS.domains %}
+                        <div class="metric-badge">
+                            <span>{{ item.label }}</span>
+                            <span class="metric-badge-val">{{ item.value }}%</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Card 2: Horizontal Bar Chart for Language Proficiency -->
+                <div class="story-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 450px; padding: 28px;">
+                    <div class="card-meta">Language Stack</div>
+                    <h3 class="card-title" style="margin-bottom: 20px;">Language Proficiency</h3>
+                    <div style="width: 100%; height: 240px; position: relative;">
+                        <canvas id="barChart"></canvas>
+                    </div>
+                    <div class="metric-badge-grid">
+                        {% for item in config.STATS.languages %}
+                        <div class="metric-badge">
+                            <span>{{ item.label }}</span>
+                            <span class="metric-badge-val">{{ item.value }}%</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                <!-- Card 3: Donut Chart for Project Distribution -->
+                <div class="story-card" style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 450px; padding: 28px;">
+                    <div class="card-meta">Domain Breakdown</div>
+                    <h3 class="card-title" style="margin-bottom: 20px;">Project Allocations</h3>
+                    <div style="width: 100%; height: 240px; position: relative;">
+                        <canvas id="donutChart"></canvas>
+                    </div>
+                    <div class="metric-badge-grid">
+                        {% for item in config.STATS.projects_count %}
+                        <div class="metric-badge">
+                            <span>{{ item.label }}</span>
+                            <span class="metric-badge-val" style="color: var(--accent-cyan);">{{ item.value }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 3: Project Architecture Summary -->
+    <section id="highlights" class="story-section data-section">
+        <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1920&q=80')"></div>
+        <div class="bg-overlay"></div>
+        <div class="content-container">
+            <h2 class="section-title">Key Project Highlights[cite: 1]</h2>
+            <div class="highlights-grid">
+                {% for project in projects %}
+                <div class="story-card">
+                    <div class="card-meta">{{ project.category }}[cite: 1]</div>
+                    <h3 class="card-title">{{ project.title }}[cite: 1]</h3>
+                    <p class="card-subtitle" style="margin-top: 8px; font-size: 0.95rem; line-height: 1.6;">{{ project.desc }}[cite: 1]</p>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 4: Skills Breakdown Matrix -->
+    <section id="matrix" class="story-section data-section">
+        <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=1920&q=80')"></div>
+        <div class="bg-overlay"></div>
+        <div class="content-container">
+            <h2 class="section-title">Technical Matrix[cite: 1]</h2>
+            <div class="skills-wrapper">
+                {% for category, tags in matrix.items() %}
+                <div class="skill-group">
+                    <div class="skill-group-title">{{ category }}[cite: 1]</div>
+                    <div class="skill-tags">
+                        {% for tag in tags %}
+                        <span class="skill-tag">{{ tag }}[cite: 1]</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 5: Academic History Block -->
+    <section id="academic" class="story-section data-section">
+        <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1523050854058-8df90110c9f1?auto=format&fit=crop&w=1920&q=80')"></div>
+        <div class="bg-overlay"></div>
+        <div class="content-container">
+            <h2 class="section-title">Academic Base</h2>
+            <div class="academic-credential-card">
+                <div style="flex: 2; min-width: 280px;">
+                    <div class="card-meta">Post-Graduation — 2015</div>
+                    <h3 class="card-title" style="font-size: clamp(1.8rem, 3vw, 2.3rem); margin-bottom: 8px;">Rajasthan Technical University, Kota</h3>
+                    <h4 class="card-subtitle" style="color: var(--accent-cyan); font-size: 1.2rem; margin-bottom: 16px; font-weight: 600;">Master of Computer Applications (MCA)</h4>
+                    <p style="color: var(--text-muted); line-height: 1.7;">Advanced instruction regarding relational data schemas, secure backend service paradigms, algorithmic matrices, and full lifecycle information systems engineering layers.</p>
+                </div>
+                <div style="flex: 1; background: rgba(255,255,255,0.02); padding: 36px; border-radius: 20px; min-width: 240px; border: 1px solid rgba(255,255,255,0.05); backdrop-filter: blur(10px);">
+                    <h4 style="font-family: var(--font-header); font-size: 1.2rem; margin-bottom: 12px; color: var(--text-main); font-weight: 700;">Graduation — 2012</h4>
+                    <p style="font-size: 0.98rem; color: var(--text-muted); line-height: 1.6;">Bachelor of Computer Applications (BCA)<br><strong style="color: var(--text-main); font-weight: 500;">University of Rajasthan, Jaipur</strong></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Section 6: Communications Hub Map Interface -->
+    <section id="contact" class="story-section data-section">
+        <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1920&q=80')"></div>
+        <div class="bg-overlay"></div>
+        <div class="content-container contact-layout">
+            <h2 class="section-title" style="margin-bottom: 12px;">Let's Design Something Resilient[cite: 1]</h2>
+            <p style="color: var(--text-muted); font-size: 1.2rem; font-family: var(--font-serif); font-style: italic;">Translating complex architectural concepts into clear technical delivery.[cite: 1]</p>
+            
+            <div class="contact-split-layout">
+                <div class="contact-links">
+                    <a href="mailto:{{ config.PROFILE.email }}" class="contact-btn"><span>📧 {{ config.PROFILE.email }}[cite: 1]</span></a>
+                    <a href="tel:{{ config.PROFILE.phone|replace(' ', '') }}" class="contact-btn"><span>📞 {{ config.PROFILE.phone }}[cite: 1]</span></a>
+                    <a href="https://wa.me/{{ config.PROFILE.phone|replace(' ', '')|replace('+', '') }}" target="_blank" class="contact-btn" style="border-color: #25d366; background: rgba(37, 211, 102, 0.05);"><span>💬 Message via WhatsApp[cite: 1]</span></a>
+                    <a href="{{ config.GATEWAYS.live_portal }}" target="_blank" class="contact-btn" style="background: var(--text-main); color: var(--bg-dark);"><span>🌐 Explore Live Portal[cite: 1]</span></a>
+                </div>
+                <div class="map-wrapper">
+                    <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4221.083157789359!2d75.70921919999999!3d26.887676099999997!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x396db52cbbd5a387%3A0xb8755b323c8a6581!2sRohit%20Jain%20software%20engineer!5e1!3m2!1sen!2sin!4v1780576315676!5m2!1sen!2sin" style="border:0; width:100%; height:100%; position:absolute; top:0; left:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="global-footer">
+        <div class="footer-container">
+            <div class="footer-credits">
+                <p>{{ config.PROFILE.name_first }} {{ config.PROFILE.name_last }}[cite: 1]</p>
+                <span style="font-size: 0.85rem;">{{ config.PROFILE.title_sub }}[cite: 1]</span>
+            </div>
+            <div class="footer-socials">
+                <a href="{{ config.GATEWAYS.linkedin }}" target="_blank" class="footer-link">LinkedIn[cite: 1]</a>
+                <a href="{{ config.GATEWAYS.github }}" target="_blank" class="footer-link">GitHub[cite: 1]</a>
+                <a href="{{ config.GATEWAYS.live_portal }}" target="_blank" class="footer-link">Live Portal[cite: 1]</a>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile Overlay Trigger Operations Logic
+        const menuTrigger = document.getElementById('mobileMenuTrigger');
+        const navOverlay = document.getElementById('mobileNavigationOverlay');
+        const overlayLinks = document.querySelectorAll('.mobile-menu-link');
+
+        function toggleMobileMenu() {
+            menuTrigger.classList.toggle('is-active');
+            navOverlay.classList.toggle('is-open');
+            document.body.style.overflow = navOverlay.classList.contains('is-open') ? 'hidden' : '';
+        }
+
+        menuTrigger.addEventListener('click', toggleMobileMenu);
+        overlayLinks.forEach(link => link.addEventListener('click', toggleMobileMenu));
+
+        // Segmented Horizontal Scroll Tracking Engine
+        const sections = document.querySelectorAll('.data-section');
+        const progressNav = document.getElementById('progressNav');
+        const menuLinks = document.querySelectorAll('.menu-link');
+        const mobileMenuLinks = document.querySelectorAll('.mobile-menu-link');
+        
+        sections.forEach((_, index) => {
+            const segment = document.createElement('div');
+            segment.classList.add('progress-segment');
+            const fill = document.createElement('div');
+            fill.classList.add('progress-fill');
+            fill.id = `fill-${index}`;
+            segment.appendChild(fill);
+            progressNav.appendChild(segment);
+        });
+
+        function handleScrollReveal() {
+            const scrollPos = window.scrollY;
+            const windowHeight = window.innerHeight;
+            const headerOffset = 80;
+            
+            sections.forEach((section, index) => {
+                const sectionTop = section.offsetTop - headerOffset;
+                const sectionHeight = section.offsetHeight;
+                
+                // Add revealed class when section enters viewport by 25% from bottom
+                if (scrollPos >= sectionTop - windowHeight * 0.75) {
+                    section.classList.add('revealed');
+                }
+                
+                if (scrollPos >= sectionTop - windowHeight / 2 && scrollPos < sectionTop + sectionHeight - windowHeight / 2) {
+                    section.classList.add('active');
+                    
+                    // Highlight active section links dynamically
+                    const sectionId = section.getAttribute('id');
+                    menuLinks.forEach(link => {
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active-nav');
+                        } else {
+                            link.classList.remove('active-nav');
+                        }
+                    });
+                    mobileMenuLinks.forEach(link => {
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active-nav');
+                        } else {
+                            link.classList.remove('active-nav');
+                        }
+                    });
+
+                    const segmentProgress = (scrollPos - sectionTop) / sectionHeight;
+                    const fillElement = document.getElementById(`fill-${index}`);
+                    if (fillElement) {
+                        fillElement.style.width = `${Math.min(Math.max(segmentProgress * 100, 0), 100)}%`;
+                    }
+                } else {
+                    section.classList.remove('active');
+                    const fillElement = document.getElementById(`fill-${index}`);
+                    if (fillElement) {
+                        fillElement.style.width = scrollPos >= sectionTop + sectionHeight - windowHeight / 2 ? '100%' : '0%';
+                    }
+                }
+            });
+        }
+
+        // Performant Parallax Scroll Effect for Section Background Layers
+        function handleParallax() {
+            const scrollPos = window.scrollY;
+            sections.forEach(section => {
+                const bg = section.querySelector('.bg-layer');
+                if (bg) {
+                    const sectionTop = section.offsetTop;
+                    const relativeScroll = scrollPos - sectionTop;
+                    const parallaxVal = relativeScroll * 0.12;
+                    bg.style.setProperty('--parallax-y', `${parallaxVal}px`);
+                }
+            });
+        }
+
+        // 3D Card Tilt Effect for Project Highlights and Analytics Cards
+        const projectCards = document.querySelectorAll('.story-card');
+        projectCards.forEach(card => {
+            card.addEventListener('mousemove', e => {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                const centerX = rect.width / 2;
+                const centerY = rect.height / 2;
+                
+                const rotateX = ((y - centerY) / centerY) * -8; // Max 8 degrees tilt
+                const rotateY = ((x - centerX) / centerX) * 8;
+                
+                card.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) translateY(-8px) scale(1.02)`;
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'perspective(1000px) rotateX(0deg) rotateY(0deg) translateY(0) scale(1)';
+            });
+        });
+
+        // Environment Data parsing for Chart.js
+        const statsLanguages = {{ config.STATS.languages | tojson }};
+        const statsDomains = {{ config.STATS.domains | tojson }};
+        const statsProjects = {{ config.STATS.projects_count | tojson }};
+
+        // Parse labels and values
+        const langLabels = statsLanguages.map(item => item.label);
+        const langValues = statsLanguages.map(item => item.value);
+
+        const domainLabels = statsDomains.map(item => item.label);
+        const domainValues = statsDomains.map(item => item.value);
+
+        const projectLabels = statsProjects.map(item => item.label);
+        const projectValues = statsProjects.map(item => item.value);
+
+        // Chart.js Global Font Config
+        Chart.defaults.font.family = 'Outfit';
+        Chart.defaults.color = '#94a3b8';
+
+        // 1. Radar Chart Setup
+        const radarCtx = document.getElementById('radarChart').getContext('2d');
+        new Chart(radarCtx, {
+            type: 'radar',
+            data: {
+                labels: domainLabels,
+                datasets: [{
+                    label: 'Capability %',
+                    data: domainValues,
+                    backgroundColor: 'rgba(6, 182, 212, 0.25)',
+                    borderColor: '#06b6d4',
+                    pointBackgroundColor: '#8b5cf6',
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: '#8b5cf6',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    r: {
+                        grid: { color: 'rgba(255, 255, 255, 0.08)' },
+                        angleLines: { color: 'rgba(255, 255, 255, 0.08)' },
+                        pointLabels: {
+                            color: '#94a3b8',
+                            font: { family: 'Outfit', size: 11, weight: '500' }
+                        },
+                        ticks: {
+                            display: false,
+                            stepSize: 20
+                        },
+                        suggestedMin: 0,
+                        suggestedMax: 100
+                    }
+                }
+            }
+        });
+
+        // 2. Horizontal Bar Chart Setup
+        const barCtx = document.getElementById('barChart').getContext('2d');
+        new Chart(barCtx, {
+            type: 'bar',
+            data: {
+                labels: langLabels,
+                datasets: [{
+                    data: langValues,
+                    backgroundColor: 'rgba(59, 130, 246, 0.35)',
+                    borderColor: '#3b82f6',
+                    borderWidth: 1.5,
+                    borderRadius: 8,
+                    hoverBackgroundColor: 'rgba(6, 182, 212, 0.55)',
+                    hoverBorderColor: '#06b6d4'
+                }]
+            },
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: {
+                        grid: { color: 'rgba(255, 255, 255, 0.05)' },
+                        ticks: {
+                            color: '#94a3b8',
+                            font: { family: 'Outfit', size: 10 }
+                        },
+                        max: 100
+                    },
+                    y: {
+                        grid: { display: false },
+                        ticks: {
+                            color: '#f8fafc',
+                            font: { family: 'Outfit', size: 11, weight: '600' }
+                        }
+                    }
+                }
+            }
+        });
+
+        // 3. Donut Chart Setup
+        const donutCtx = document.getElementById('donutChart').getContext('2d');
+        new Chart(donutCtx, {
+            type: 'doughnut',
+            data: {
+                labels: projectLabels,
+                datasets: [{
+                    data: projectValues,
+                    backgroundColor: [
+                        'rgba(139, 92, 246, 0.55)',
+                        'rgba(6, 182, 212, 0.55)',
+                        'rgba(59, 130, 246, 0.55)',
+                        'rgba(244, 63, 94, 0.55)'
+                    ],
+                    borderColor: 'rgba(255, 255, 255, 0.08)',
+                    borderWidth: 1.5,
+                    hoverOffset: 12
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: {
+                            color: '#94a3b8',
+                            font: { family: 'Outfit', size: 10, weight: '500' },
+                            padding: 15
+                        }
+                    }
+                },
+                cutout: '65%'
+            }
+        });
+
+        // Floating Navbar scroll shadow activation
+        const header = document.querySelector('.global-header');
+        function handleHeaderScroll() {
+            if (window.scrollY > 20) {
+                header.style.background = 'rgba(7, 9, 14, 0.75)';
+                header.style.boxShadow = '0 15px 40px rgba(0, 0, 0, 0.5)';
+            } else {
+                header.style.background = 'rgba(7, 9, 14, 0.45)';
+                header.style.boxShadow = '0 10px 30px rgba(0, 0, 0, 0.3)';
+            }
+        }
+
+        function handleScroll() {
+            handleScrollReveal();
+            handleParallax();
+            handleHeaderScroll();
+        }
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        window.addEventListener('resize', handleScroll, { passive: true });
+        
+        // Initial call to set active/revealed states and parallax offsets
+        handleScroll();
+    </script>
+</body>
+</html>
