@@ -963,6 +963,7 @@
                         <li><a href="#highlights" class="menu-link">Projects</a></li>
                         <li><a href="#matrix" class="menu-link">Skills</a></li>
                         <li><a href="#academic" class="menu-link">Education</a></li>
+                        <li><a href="#events" class="menu-link">Events</a></li>
                     </ul>
                 </nav>
                 <div class="header-socials-top">
@@ -988,6 +989,7 @@
             <li><a href="#highlights" class="mobile-menu-link">Projects</a></li>
             <li><a href="#matrix" class="mobile-menu-link">Skills</a></li>
             <li><a href="#academic" class="mobile-menu-link">Education</a></li>
+            <li><a href="#events" class="mobile-menu-link">Events</a></li>
         </ul>
         <div class="mobile-socials-wrapper">
             <a href="{{ config.GATEWAYS.linkedin }}" target="_blank" class="contact-btn">LinkedIn</a>
@@ -1046,7 +1048,7 @@
         <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1639762681485-074b7f938ba0?auto=format&fit=crop&w=1920&q=80')"></div>
         <div class="bg-overlay"></div>
         <div class="content-container">
-            <h2 class="section-title">Professional Journey[cite: 1]</h2>
+            <h2 class="section-title">Professional Journey</h2>
             <div class="timeline-modern-container">
                 {% for job in timeline %}
                 <div class="timeline-modern-card">
@@ -1054,16 +1056,16 @@
                         <div class="company-identity-group">
                             <div class="company-avatar-box">{{ job.company[0] }}</div>
                             <div>
-                                <h3 class="card-title" style="font-size: 1.4rem; font-weight: 600;">{{ job.company }}[cite: 1]</h3>
-                                <span class="job-title-badge">{{ job.role }}[cite: 1]</span>
+                                <h3 class="card-title" style="font-size: 1.4rem; font-weight: 600;">{{ job.company }}</h3>
+                                <span class="job-title-badge">{{ job.role }}</span>
                             </div>
                         </div>
-                        <div class="timeline-period-badge">{{ job.period }}[cite: 1]</div>
+                        <div class="timeline-period-badge">{{ job.period }}</div>
                     </div>
                     <div class="card-body">
                         <ul class="timeline-body-list">
                             {% for highlight in job.highlights %}
-                            <li>{{ highlight }}[cite: 1]</li>
+                            <li>{{ highlight }}</li>
                             {% endfor %}
                         </ul>
                     </div>
@@ -1140,13 +1142,13 @@
         <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1920&q=80')"></div>
         <div class="bg-overlay"></div>
         <div class="content-container">
-            <h2 class="section-title">Key Project Highlights[cite: 1]</h2>
+            <h2 class="section-title">Key Project Highlights</h2>
             <div class="highlights-grid">
                 {% for project in projects %}
                 <div class="story-card">
-                    <div class="card-meta">{{ project.category }}[cite: 1]</div>
-                    <h3 class="card-title">{{ project.title }}[cite: 1]</h3>
-                    <p class="card-subtitle" style="margin-top: 8px; font-size: 0.95rem; line-height: 1.6;">{{ project.desc }}[cite: 1]</p>
+                    <div class="card-meta">{{ project.category }}</div>
+                    <h3 class="card-title">{{ project.title }}</h3>
+                    <p class="card-subtitle" style="margin-top: 8px; font-size: 0.95rem; line-height: 1.6;">{{ project.desc }}</p>
                 </div>
                 {% endfor %}
             </div>
@@ -1158,14 +1160,14 @@
         <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1607799279861-4dd421887fb3?auto=format&fit=crop&w=1920&q=80')"></div>
         <div class="bg-overlay"></div>
         <div class="content-container">
-            <h2 class="section-title">Technical Matrix[cite: 1]</h2>
+            <h2 class="section-title">Technical Matrix</h2>
             <div class="skills-wrapper">
                 {% for category, tags in matrix.items() %}
                 <div class="skill-group">
-                    <div class="skill-group-title">{{ category }}[cite: 1]</div>
+                    <div class="skill-group-title">{{ category }}</div>
                     <div class="skill-tags">
                         {% for tag in tags %}
-                        <span class="skill-tag">{{ tag }}[cite: 1]</span>
+                        <span class="skill-tag">{{ tag }}</span>
                         {% endfor %}
                     </div>
                 </div>
@@ -1195,19 +1197,49 @@
         </div>
     </section>
 
+    <!-- Section 5.5: Events & Community Engagement -->
+    <section id="events" class="story-section data-section">
+        <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1920&q=80')"></div>
+        <div class="bg-overlay"></div>
+        <div class="content-container">
+            <h2 class="section-title">Tech Events & Community Participation</h2>
+            <div class="highlights-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px;">
+                {% for event in events %}
+                <div class="story-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
+                            <span class="card-meta" style="margin-bottom: 0;">{{ event.badge }}</span>
+                            <span style="font-size: 0.75rem; background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.3); font-weight: 600;">{{ event.organizer }}</span>
+                        </div>
+                        <h3 class="card-title" style="font-size: 1.3rem; margin-bottom: 8px;">{{ event.title }}</h3>
+                        <p style="font-size: 0.85rem; color: var(--accent-cyan); margin-bottom: 6px; font-weight: 600;">📅 {{ event.date }}</p>
+                        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">📍 {{ event.location }}</p>
+                        
+                        <ul class="timeline-body-list" style="margin-top: 12px;">
+                            {% for highlight in event.highlights %}
+                            <li style="font-size: 0.9rem; line-height: 1.5;">{{ highlight }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
     <!-- Section 6: Communications Hub Map Interface -->
     <section id="contact" class="story-section data-section">
         <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1516321318423-f06f85e504b3?auto=format&fit=crop&w=1920&q=80')"></div>
         <div class="bg-overlay"></div>
         <div class="content-container contact-layout">
-            <h2 class="section-title" style="margin-bottom: 12px;">Let's Design Something Resilient[cite: 1]</h2>
-            <p style="color: var(--text-muted); font-size: 1.2rem; font-family: var(--font-serif); font-style: italic;">Translating complex architectural concepts into clear technical delivery.[cite: 1]</p>
+            <h2 class="section-title" style="margin-bottom: 12px;">Let's Build Something Resilient</h2>
+            <p style="color: var(--text-muted); font-size: 1.2rem; font-family: var(--font-serif); font-style: italic;">Let's collaborate to engineer secure backend portals, API integrations, and robust AI workflows.</p>
             
             <div class="contact-split-layout">
                 <div class="contact-links">
-                    <a href="mailto:{{ config.PROFILE.email }}" class="contact-btn"><span>📧 {{ config.PROFILE.email }}[cite: 1]</span></a>
-                    <a href="tel:{{ config.PROFILE.phone|replace(' ', '') }}" class="contact-btn"><span>📞 {{ config.PROFILE.phone }}[cite: 1]</span></a>
-                    <a href="https://wa.me/{{ config.PROFILE.phone|replace(' ', '')|replace('+', '') }}" target="_blank" class="contact-btn" style="border-color: #25d366; background: rgba(37, 211, 102, 0.05);"><span>💬 Message via WhatsApp[cite: 1]</span></a>
+                    <a href="mailto:{{ config.PROFILE.email }}" class="contact-btn"><span>📧 {{ config.PROFILE.email }}</span></a>
+                    <a href="tel:{{ config.PROFILE.phone|replace(' ', '') }}" class="contact-btn"><span>📞 {{ config.PROFILE.phone }}</span></a>
+                    <a href="https://wa.me/{{ config.PROFILE.phone|replace(' ', '')|replace('+', '') }}" target="_blank" class="contact-btn" style="border-color: #25d366; background: rgba(37, 211, 102, 0.05);"><span>💬 Message via WhatsApp</span></a>
                     <a href="{{ config.GATEWAYS.resume }}" target="_blank" class="contact-btn" style="background: var(--text-main); color: var(--bg-dark);"><span>📄 Download Resume</span></a>
                 </div>
                 <div class="map-wrapper">
@@ -1220,13 +1252,13 @@
     <footer class="global-footer">
         <div class="footer-container">
             <div class="footer-credits">
-                <p>{{ config.PROFILE.name_first }} {{ config.PROFILE.name_last }}[cite: 1]</p>
-                <span style="font-size: 0.85rem;">{{ config.PROFILE.title_sub }}[cite: 1]</span>
+                <p>{{ config.PROFILE.name_first }} {{ config.PROFILE.name_last }}</p>
+                <span style="font-size: 0.85rem;">{{ config.PROFILE.title_sub }}</span>
             </div>
             <div class="footer-socials">
-                <a href="{{ config.GATEWAYS.linkedin }}" target="_blank" class="footer-link">LinkedIn[cite: 1]</a>
-                <a href="{{ config.GATEWAYS.github }}" target="_blank" class="footer-link">GitHub[cite: 1]</a>
-                <a href="{{ config.GATEWAYS.resume }}" target="_blank" class="footer-link">Resume[cite: 1]</a>
+                <a href="{{ config.GATEWAYS.linkedin }}" target="_blank" class="footer-link">LinkedIn</a>
+                <a href="{{ config.GATEWAYS.github }}" target="_blank" class="footer-link">GitHub</a>
+                <a href="{{ config.GATEWAYS.resume }}" target="_blank" class="footer-link">Resume</a>
             </div>
         </div>
     </footer>

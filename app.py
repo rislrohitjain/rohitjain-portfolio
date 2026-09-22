@@ -44,9 +44,9 @@ app.config.update(
         "resume": os.getenv("RESUME_DOWNLOAD_URL"),
     },
     STATS={
-        "languages": parse_env_stats("STATS_LANGUAGES", "PHP:90,JavaScript:85,SQL:95,Python:70,CSharp:65"),
-        "domains": parse_env_stats("STATS_DOMAINS", "Backend:95,Database:90,AI_Automation:80,Security_API:85,Frontend:70"),
-        "projects_count": parse_env_stats("STATS_PROJECTS_COUNT", "State_Platforms:12,API_Middleware:8,AI_Tools:5,E_Commerce:15")
+        "languages": parse_env_stats("STATS_LANGUAGES", "Python:90,PHP:90,JavaScript:85,SQL:95,CSharp:65"),
+        "domains": parse_env_stats("STATS_DOMAINS", "Backend:95,AI_Automation:90,Database:90,Security_API:85,Frontend:70"),
+        "projects_count": parse_env_stats("STATS_PROJECTS_COUNT", "State_Platforms:12,AI_Applications:8,API_Middleware:8,E_Commerce:15")
     }
 )
 
@@ -110,6 +110,11 @@ EXPERIENCE_TIMELINE = [
 # Core Enterprise Project Highlights Dataset
 PROJECT_HIGHLIGHTS = [
     {
+        "category": "Python AI & Agentic Workflows",
+        "title": "Python AI Suite & Autonomous Agents",
+        "desc": "Designed and deployed Python-based AI applications utilizing Ollama, LangChain, Google Gemini API, and Anthropic Claude. Features automated code review, RAG document processing, and autonomous workflow automation pipelines."
+    },
+    {
         "category": "State Platform Architecture",
         "title": "RSOS Student Lifecycle Portal",
         "desc": "End-to-end platform managing Admission → Examination → Result Publishing. Integrated natively with Rajasthan SSO. Achieved a 50% runtime reduction in lifecycle generation through explicit stored-procedure refinement optimizations."
@@ -126,19 +131,69 @@ PROJECT_HIGHLIGHTS = [
     },
     {
         "category": "Privacy-First Engineering",
-        "title": "Local AI Development Env",
+        "title": "Local LLM Development Cluster",
         "desc": "Isolated secure LLM cluster deployment running Ollama, Gemini, and Claude parameters for automated system review tasks. Cut manual source validation workloads by 30%; currently driving automated test engine generation models."
     }
 ]
 
 # Comprehensive Skill-Set Structural Matrix Dictionary
 TECHNICAL_MATRIX = {
-    "Languages": ["PHP", "JavaScript", "SQL", "Python (Learning)", "C# / .NET (Learning)"],
-    "Frameworks & CMS": ["Laravel (8/10)", "CakePHP", "Yii", "CodeIgniter", "jQuery", "Bootstrap", "Core .NET", "WordPress"],
-    "AI & LLM Integration": ["Ollama (Local/Cloud)", "Google Gemini API", "Claude (Anthropic)", "n8n Workflow Hub", "LangChain", "LangSmith", "AI-IVR Systems"],
-    "Databases & Analytics": ["MySQL", "MSSQL", "PostgreSQL", "ChromaDB (Learning)", "Pentaho BI", "Tableau"],
-    "Architecture & DevOps": ["REST/SOAP APIs", "RBAC Security", "Microservices", "Git / GitHub", "Docker (Learning)", "IIS Server", "Vercel"]
+    "Languages": ["Python (Advanced)", "PHP", "JavaScript", "SQL", "C# / .NET"],
+    "Frameworks & CMS": ["Laravel", "Flask", "FastAPI", "CakePHP", "jQuery", "Bootstrap", "Core .NET", "WordPress"],
+    "AI & LLM Integration": ["Python Agentic AI", "Ollama (Local/Cloud)", "Google Gemini API", "Claude (Anthropic)", "n8n Workflow Hub", "LangChain", "RAG Systems", "AI-IVR Systems"],
+    "Databases & Analytics": ["MySQL", "MSSQL", "PostgreSQL", "ChromaDB (Vector DB)", "Pentaho BI", "Tableau"],
+    "Architecture & DevOps": ["REST/SOAP APIs", "RBAC Security", "Microservices", "Git / GitHub", "Docker", "IIS Server", "Vercel"]
 }
+
+# Tech Community & Tech Event Participation Dataset
+COMMUNITY_EVENTS = [
+    {
+        "title": "BrowserStack Testathon Jaipur 2026",
+        "date": "Saturday, September 5, 2026 | 10:00 AM IST",
+        "location": "Metacube Software Pvt. Ltd., Sitapura Industrial Area, Jaipur, Rajasthan",
+        "organizer": "BrowserStack Community",
+        "badge": "QA & Test Automation",
+        "highlights": [
+            "3-Hour Hands-On Hackathon: Designed, documented, and developed an end-to-end automated test suite for a buggy web application under a 3-hour constraint.",
+            "BrowserStack QA Suite Utilization: Leveraged BrowserStack Automate (cross-browser/device execution), Test Management, Test Companion, and Test Observability (failure pattern analysis).",
+            "Framework & Code Integration: Integrated test automation frameworks (Selenium, Playwright, Cypress) using BrowserStack SDK and published repositories on GitHub."
+        ]
+    },
+    {
+        "title": "Cloud Coffee Connect — AI on AWS & Open Source",
+        "date": "Saturday, September 19, 2026 | 10:00 AM – 1:00 PM IST",
+        "location": "Pratham Software, Sitapura Industrial Area, Jaipur, Rajasthan",
+        "organizer": "AWS User Group Jaipur",
+        "badge": "AI & Cloud Architecture",
+        "highlights": [
+            "Cloud & AI Focus: Technical meetup focused on deploying, optimizing, and scaling Artificial Intelligence (AI) solutions on AWS alongside open-source AI frameworks.",
+            "Architectural Discussions & Networking: Explored open-source LLMs, AI/ML pipelines on AWS, and interacted with cloud engineers, AI developers, and architects."
+        ]
+    },
+    {
+        "title": "Atlassian × Tableau: Integrating Jira & Confluence with Tableau",
+        "date": "Sunday, September 20, 2026 | 11:00 AM – 2:00 PM IST",
+        "location": "Kundan Hall, The Fern Jaipur, Tonk Road, Jaipur, Rajasthan",
+        "organizer": "Atlassian Community Events",
+        "badge": "DevOps & Data Analytics",
+        "highlights": [
+            "Integrating Jira & Confluence with Tableau (by Hemant Saini): Technical session on setting up architecture to connect Jira Cloud and Confluence with Tableau Server/Cloud (OAuth, SSO, PATs, live metrics embedding).",
+            "Atlassian & Tableau Certifications: Insights into certification paths, exam structures, and learning pathways presented by Anamika Soni and Tarun Gupta.",
+            "Community Engagement: Active participation in technical Q&A and community networking."
+        ]
+    },
+    {
+        "title": "Agile Testing Alliance (ATA)",
+        "date": "August 28, 2026",
+        "location": "Jaipur, Rajasthan",
+        "organizer": "Agile Testing Alliance",
+        "badge": "Agile Quality Engineering",
+        "highlights": [
+            "Agile QA & Testing Community: Participated in community learning and professional networking with industry leaders from Agile Testing Alliance.",
+            "Core Themes: Focused on agile testing methodologies, test automation standards, continuous testing pipelines, and modern quality engineering practices."
+        ]
+    }
+]
 
 # Root Presentation Route Handler
 @app.route('/')
@@ -148,7 +203,8 @@ def home():
         config=app.config,
         timeline=EXPERIENCE_TIMELINE,
         projects=PROJECT_HIGHLIGHTS,
-        matrix=TECHNICAL_MATRIX
+        matrix=TECHNICAL_MATRIX,
+        events=COMMUNITY_EVENTS
     )
 
 # Dedicated Static Asset Delivery Route for Root-Level File Mapping
