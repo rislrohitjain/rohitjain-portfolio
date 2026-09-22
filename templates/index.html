@@ -1013,8 +1013,9 @@
                     Email: <span>{{ config.PROFILE.email }}</span> &nbsp;|&nbsp; Phone: <span>{{ config.PROFILE.phone }}</span>
                 </div>
 
-                <div class="contact-links" style="margin-top: 0; align-items: flex-start;">
+                <div class="contact-links" style="margin-top: 0; align-items: flex-start; flex-direction: row; flex-wrap: wrap; gap: 12px;">
                     <a href="#journey" class="contact-btn" style="background: var(--accent-blue); border-color: var(--accent-blue); color: white;">Explore Portfolio</a>
+                    <a href="#events" class="contact-btn" style="background: linear-gradient(135deg, var(--accent-purple), var(--accent-cyan)); border-color: transparent; color: #ffffff; box-shadow: 0 0 20px rgba(6, 182, 212, 0.35);">🎤 Tech Events & Community</a>
                 </div>
             </div>
             
@@ -1202,16 +1203,19 @@
         <div class="bg-layer" style="background-image: url('https://images.unsplash.com/photo-1540575467063-178a50c2df87?auto=format&fit=crop&w=1920&q=80')"></div>
         <div class="bg-overlay"></div>
         <div class="content-container">
+            <div style="margin-bottom: 12px;">
+                <span class="job-title-badge" style="background: linear-gradient(135deg, rgba(139, 92, 246, 0.3), rgba(6, 182, 212, 0.3)); color: #ffffff; border: 1px solid var(--accent-cyan); font-size: 0.85rem; padding: 8px 18px; box-shadow: 0 0 15px rgba(6, 182, 212, 0.25);">🌟 Featured Community Participation — Jaipur, Rajasthan</span>
+            </div>
             <h2 class="section-title">Tech Events & Community Participation</h2>
             <div class="highlights-grid" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 28px;">
                 {% for event in events %}
-                <div class="story-card" style="display: flex; flex-direction: column; justify-content: space-between;">
+                <div class="story-card" style="display: flex; flex-direction: column; justify-content: space-between; border: 1px solid rgba(6, 182, 212, 0.35); box-shadow: 0 15px 35px rgba(0,0,0,0.4), 0 0 20px rgba(6, 182, 212, 0.12); background: rgba(13, 20, 38, 0.65);">
                     <div>
                         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px; margin-bottom: 12px;">
                             <span class="card-meta" style="margin-bottom: 0;">{{ event.badge }}</span>
-                            <span style="font-size: 0.75rem; background: rgba(6, 182, 212, 0.15); color: var(--accent-cyan); padding: 4px 10px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.3); font-weight: 600;">{{ event.organizer }}</span>
+                            <span style="font-size: 0.75rem; background: rgba(6, 182, 212, 0.2); color: var(--accent-cyan); padding: 5px 12px; border-radius: 12px; border: 1px solid rgba(6, 182, 212, 0.4); font-weight: 700;">{{ event.organizer }}</span>
                         </div>
-                        <h3 class="card-title" style="font-size: 1.3rem; margin-bottom: 8px;">{{ event.title }}</h3>
+                        <h3 class="card-title" style="font-size: 1.3rem; margin-bottom: 8px; background: linear-gradient(135deg, #ffffff 40%, #a5b4fc 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">{{ event.title }}</h3>
                         <p style="font-size: 0.85rem; color: var(--accent-cyan); margin-bottom: 6px; font-weight: 600;">📅 {{ event.date }}</p>
                         <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px; line-height: 1.4;">📍 {{ event.location }}</p>
                         
