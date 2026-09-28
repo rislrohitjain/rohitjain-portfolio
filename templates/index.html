@@ -1693,7 +1693,15 @@
                 videoOverlay.classList.add('is-open');
                 videoOverlay.setAttribute('aria-hidden', 'false');
                 document.body.style.overflow = 'hidden';
-                modalVideo.play().catch(e => console.log('Autoplay handled:', e));
+                if (modalVideo.readyState < 2) {
+                    modalVideo.load();
+                }
+                var promise = modalVideo.play();
+                if (promise !== undefined) {
+                    promise.catch(function(e) {
+                        console.log('Autoplay handled:', e);
+                    });
+                }
             }
 
             function closeVideoModal() {
