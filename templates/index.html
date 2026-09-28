@@ -450,31 +450,167 @@
             100% { transform: rotate(360deg); }
         }
 
-        .video-intro-wrapper {
+        /* Video Trigger Thumbnail Card */
+        .video-trigger-card {
             width: 100%;
-            max-width: 280px; /* Adjusted to 280px to align with profile photo clamp limit */
-            background: rgba(10, 16, 30, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            max-width: 280px;
+            background: rgba(10, 16, 30, 0.65);
+            border: 1px solid var(--glass-border);
             border-radius: 20px;
-            padding: 6px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5), 0 0 20px rgba(59, 130, 246, 0.1);
+            padding: 12px 18px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4), 0 0 20px rgba(59, 130, 246, 0.1);
             backdrop-filter: blur(15px);
-            overflow: hidden;
-            transition: all 0.4s ease;
+            cursor: pointer;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            display: flex;
+            align-items: center;
+            gap: 14px;
         }
 
-        .video-intro-wrapper:hover {
+        .video-trigger-card:hover {
             border-color: var(--accent-cyan);
-            box-shadow: 0 20px 45px rgba(0,0,0,0.6), 0 0 25px rgba(6, 182, 212, 0.25);
-            transform: translateY(-2px);
+            background: rgba(13, 20, 38, 0.85);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.6), 0 0 25px rgba(6, 182, 212, 0.35);
+            transform: translateY(-4px) scale(1.02);
         }
 
-        .portfolio-video {
+        .play-btn-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+            box-shadow: 0 0 15px rgba(6, 182, 212, 0.5);
+            position: relative;
+        }
+
+        .play-btn-circle::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            border: 2px solid var(--accent-cyan);
+            opacity: 0.6;
+            animation: pulsePlay 2s infinite ease-in-out;
+        }
+
+        @keyframes pulsePlay {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.4); opacity: 0; }
+        }
+
+        .video-trigger-text {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .video-trigger-title {
+            font-family: var(--font-header);
+            font-size: 0.92rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .video-trigger-sub {
+            font-size: 0.75rem;
+            color: var(--accent-cyan);
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Video Popup Modal Overlay */
+        .video-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            border-radius: 14px;
+            height: 100vh;
+            background: rgba(3, 5, 12, 0.92);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 24px;
+        }
+
+        .video-modal-overlay.is-open {
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+        }
+
+        .video-modal-container {
+            width: 100%;
+            max-width: 820px;
+            background: rgba(13, 20, 38, 0.85);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8), 0 0 30px rgba(6, 182, 212, 0.2);
+            position: relative;
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .video-modal-overlay.is-open .video-modal-container {
+            transform: scale(1) translateY(0);
+        }
+
+        .video-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .video-modal-title {
+            font-family: var(--font-header);
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .video-modal-close {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: var(--text-muted);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+
+        .video-modal-close:hover {
+            background: var(--accent-cyan);
+            color: #000000;
+            transform: scale(1.1);
+        }
+
+        .modal-video-element {
+            width: 100%;
+            max-height: 70vh;
+            border-radius: 16px;
             display: block;
             outline: none;
-            background: #000;
+            background: #000000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         /* Modernized Timeline Styling Elements */
@@ -1027,14 +1163,15 @@
                     </div>
                 </div>
                 
-                <!-- Immersive Native HTML5 Video System -->
+                <!-- Video Trigger Button -->
                 {% if config.INTRO_VIDEO %}
-                <div class="video-intro-wrapper">
-                    <video class="portfolio-video" controls preload="metadata" poster="{{ url_for('serve_root_assets', filename=config.PROFILE_PIC) }}">
-                        <source src="{{ url_for('serve_root_assets', filename=config.INTRO_VIDEO) }}" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                </div>
+                <button class="video-trigger-card" id="openVideoModalBtn" type="button" aria-label="Play Intro Video">
+                    <div class="play-btn-circle">▶</div>
+                    <div class="video-trigger-text">
+                        <span class="video-trigger-title">Watch Video Introduction</span>
+                        <span class="video-trigger-sub">Click to play video popup</span>
+                    </div>
+                </button>
                 {% endif %}
             </div>
         </div>
@@ -1545,8 +1682,64 @@
         window.addEventListener('scroll', handleScroll, { passive: true });
         window.addEventListener('resize', handleScroll, { passive: true });
         
+        // Video Popup Modal Operations Logic
+        const openVideoBtn = document.getElementById('openVideoModalBtn');
+        const closeVideoBtn = document.getElementById('closeVideoModalBtn');
+        const videoOverlay = document.getElementById('videoModalOverlay');
+        const modalVideo = document.getElementById('modalPortfolioVideo');
+
+        if (openVideoBtn && videoOverlay && modalVideo) {
+            function openVideoModal() {
+                videoOverlay.classList.add('is-open');
+                videoOverlay.setAttribute('aria-hidden', 'false');
+                document.body.style.overflow = 'hidden';
+                modalVideo.play().catch(e => console.log('Autoplay handled:', e));
+            }
+
+            function closeVideoModal() {
+                videoOverlay.classList.remove('is-open');
+                videoOverlay.setAttribute('aria-hidden', 'true');
+                document.body.style.overflow = '';
+                modalVideo.pause();
+                modalVideo.currentTime = 0;
+            }
+
+            openVideoBtn.addEventListener('click', openVideoModal);
+            if (closeVideoBtn) closeVideoBtn.addEventListener('click', closeVideoModal);
+
+            // Close on backdrop click outside container
+            videoOverlay.addEventListener('click', function(e) {
+                if (e.target === videoOverlay) {
+                    closeVideoModal();
+                }
+            });
+
+            // Close on Escape key press
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && videoOverlay.classList.contains('is-open')) {
+                    closeVideoModal();
+                }
+            });
+        }
+
         // Initial call to set active/revealed states and parallax offsets
         handleScroll();
     </script>
+
+    <!-- Video Popup Modal Component -->
+    {% if config.INTRO_VIDEO %}
+    <div class="video-modal-overlay" id="videoModalOverlay" aria-hidden="true">
+        <div class="video-modal-container">
+            <div class="video-modal-header">
+                <span class="video-modal-title">📹 Video Introduction — {{ config.BRAND_NAME }}</span>
+                <button class="video-modal-close" id="closeVideoModalBtn" type="button" aria-label="Close Video Popup">✕</button>
+            </div>
+            <video class="modal-video-element" id="modalPortfolioVideo" controls preload="metadata" poster="{{ url_for('serve_root_assets', filename=config.PROFILE_PIC) }}">
+                <source src="{{ url_for('serve_root_assets', filename=config.INTRO_VIDEO) }}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </div>
+    {% endif %}
 </body>
 </html>

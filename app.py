@@ -25,7 +25,7 @@ app.config.update(
     BRAND_NAME=os.getenv("BRAND_NAME", "Rohit Jain"),
     INITIALS=os.getenv("INITIALS", "RJ"),
     PROFILE_PIC=os.getenv("PROFILE_PIC_FILENAME", "Rohit_Photo.jpg"),
-    INTRO_VIDEO=os.getenv("INTRO_VIDEO_FILENAME", "add_my_profile_pic_or_video_wh.mp4"),
+    INTRO_VIDEO=os.getenv("INTRO_VIDEO_FILENAME", "rohit_ai_ata.mp4"),
     FAVICON=os.getenv("FAVICON_FILENAME", "Rohit_Photo.jpg"),
     PROFILE={
         "title_sub": os.getenv("TITLE_SUB", "Senior Full-Stack Developer & AI Automation Architect"),
