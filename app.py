@@ -210,8 +210,8 @@ def home():
 # Dedicated Static Asset Delivery Route for Root-Level File Mapping
 @app.route('/<filename>')
 def serve_root_assets(filename):
-    # Allows app.py to dynamically route files stored straight inside the root directory safely
-    return send_from_directory('.', filename)
+    # Allows app.py to dynamically route files stored straight inside the root directory safely with Range request support (HTTP 206)
+    return send_from_directory('.', filename, conditional=True)
 
 if __name__ == '__main__':
     # Binding port for Hugging Face or general container deployment infrastructure
